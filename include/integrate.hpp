@@ -2,6 +2,7 @@
 #define INTEGRATE_H_
 
 #include "Eigen/Dense"
+#include "diffusion_coeffs.hpp"
 
 using namespace Eigen;
 
@@ -130,6 +131,44 @@ private:
     float D;
 };
 
+
+
+class CrankNicholsonRadial: public Scheme1D{
+
+public:
+    CrankNicholsonRadial(int dim, float dx, float T) : Scheme1D(dim), deltax(dx), tau(T)
+    {
+    }
+    
+    void evaluate_A(const Eigen::VectorXf& X, float dt){
+        float coeff = dt*D/(2*dt*dt);
+        A = Eigen::MatrixXf::Zero (grid_dim, grid_dim);
+        A(0,0) = 1 + 2*coeff;
+        A(0,1) = -coeff;
+        for (int i = 1 ; i < grid_dim-1 ; ++i )
+        {
+            A(i,i) = 1 + 2*coeff;
+            A(i,i-1) = -coeff;
+            A(i,i+1) = -coeff;
+        }
+        A(grid_dim-1, grid_dim-1) = 1+2*coeff;
+        A(grid_dim-1, grid_dim-2) = -coeff;
+    }
+    
+    //TODO Works with zero boundary conditions at the edges
+    void evaluate_b(const Eigen::VectorXf& X, float dt){
+        b = Eigen::VectorXf (grid_dim);
+        for (int i = 1 ; i < grid_dim - 1 ; ++i ){
+            b(i) = X(i)*(1.0/dt + CoeffA()/std::pow(deltax, 2));
+        }
+
+    }
+    
+    
+private:
+    float deltax;
+    float tau;
+};
 
 
 
