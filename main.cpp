@@ -1,22 +1,22 @@
 #include <iostream>
 
 #include "integrate.hpp"
+#include "solver.hpp"
+#include "grid.hpp"
+#include "boundary.hpp"
+#include <vector>
 
-using namespace Eigen;
 
 int main()
 {
-    Eigen::VectorXf Xi (50), Xf;
-    for (int i=0 ; i < Xi.size()  ; ++i)
-        Xi(i) = 2;
-    
-    CrankNicholson scheme(50, 5, 1);
-    Xf = scheme.make_step(Xi, 0.1);
-   
-    for (int j = 0; j< 500 ; ++j)
-        Xf = scheme.make_step(Xf, 0.1);
-    for (int i=0 ; i < Xi.size()  ; ++i)
-        std::cout << Xf(i) << std::endl;
+    const int N = 50;
+    std::vector<float> Xin (N), Obs(0);
+    for (int i=0 ; i < N ; ++i)
+        Xin[i] = 1.0;
+    Grid1D<> grid(N, 1.0, 6.0, Xin);
+    Boundary1D<> boundary(0.0, 0.0);
+    ImplicitScheme1D scheme(grid.get_deltax(),1.0);
+    solve1D(grid, scheme, boundary,Obs , 0.0, 10.0, 0.1);
     
 	return 0;
 }
