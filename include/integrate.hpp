@@ -7,7 +7,6 @@
 
 using namespace Eigen;
 
-
 class Scheme1D{
 public:
     Scheme1D(){}
@@ -99,7 +98,6 @@ private:
 };
 
 
-
 class CrankNicholson: public Scheme1D{
 
 public:
@@ -109,7 +107,7 @@ public:
     
     void evaluate_A(const Eigen::VectorXf& X, float dt){
         float coeff = dt*D/(2*dt*dt);
-        A = Eigen::MatrixXf::Zero (grid_dim, grid_dim);
+        A = Eigen::MatrixXf::Zero (X.size(), X.size());
         A(0,0) = 1 + 2*coeff;
         A(0,1) = -coeff;
         for (int i = 1 ; i < X.size()-1 ; ++i )
@@ -126,7 +124,7 @@ public:
     void evaluate_b(const Eigen::VectorXf& X, float dt){
         
         float coeff = dt*D/(2*dt*dt);
-        b.resize(grid_dim);
+        b.resize(X.size());
         for (int i = 1 ; i < X.size() - 1 ; ++i )
             b(i) = coeff*(X(i-1) + X(i+1))+(1-2*coeff)*X(i);
 
@@ -138,13 +136,69 @@ private:
 };
 
 
+class ImplicitRadialDiffusion: public Scheme1D{
+
+public:
+    ImplicitRadialDiffusion(float dx, float T) : Scheme1D(), deltax(dx), tau(T)
+    {
+    }
+    
+    
+    std::vector<float> make_step(std::vector<float>& Xvec, std::vector<float>& Lvec, float kp, float dt) {
+        Eigen::VectorXf X= Eigen::Map<Eigen::VectorXf, Eigen::Unaligned>(Xvec.data(), Xvec.size());
+        Eigen::VectorXf L= Eigen::Map<Eigen::VectorXf, Eigen::Unaligned>(Lvec.data(), Lvec.size());
+        evaluate_A(X, L, kp, dt);
+        evaluate_b(X, dt);
+        X = A.colPivHouseholderQr().solve(b);
+        std::vector<float> Xf(X.data(), X.data() + X.rows() * X.cols());
+        return Xf;
+    }
+    
+    void evaluate_A(const Eigen::VectorXf& X, const Eigen::VectorXf& L, float kp, float dt){
+        A = Eigen::MatrixXf::Zero (X.size(), X.size());
+        A(0,0) = 1.0/dt + 1.0/tau + 2*CoeffA(L[0], kp)/std::pow(deltax, 2);
+        A(0,1) = -CoeffA(L[0], kp)/std::pow(deltax, 2) - CoeffB(L[0], kp)/(2*deltax);
+        for (int i = 1 ; i < X.size()-1 ; ++i ){
+            A(i,i) = 1.0/dt + 1.0/tau + 2*CoeffA(L[i], kp)/std::pow(deltax, 2);
+            A(i,i-1) = -CoeffA(L[i], kp)/std::pow(deltax, 2) + CoeffB(L[i], kp)/(2*deltax);
+            A(i,i+1) = -CoeffA(L[i], kp)/std::pow(deltax, 2) - CoeffB(L[i], kp)/(2*deltax);
+        }
+        A(X.size()-1, X.size()-1) = 1.0/dt + 1.0/tau + 2*CoeffA(L[X.size()-1], kp)/std::pow(deltax, 2);
+        A(X.size()-1, X.size()-2) = -CoeffA(L[X.size()-1], kp)/std::pow(deltax, 2) + CoeffB(L[X.size()-1], kp)/(2*deltax);
+    }
+    
+    void evaluate_b(const Eigen::VectorXf& X, float dt){
+        b = Eigen::VectorXf (X.size());
+        for (int i = 1 ; i < X.size() - 1 ; ++i)
+            b(i) = X(i)/dt;
+    }
+    
+private:
+    float deltax;
+    float tau;        //Decay rate Model hyperparameter
+};
+
+
 /*
 class CrankNicholsonRadial: public Scheme1D{
 
 public:
-    CrankNicholsonRadial(int dim, float dx, float T) : Scheme1D(dim), deltax(dx), tau(T)
+    CrankNicholsonRadial(float dx, float T) : Scheme1D(), deltax(dx), tau(T)
     {
     }
+    
+    
+    
+    std::vector<float> make_step(std::vector<float>& Xvec, float dt) {
+        Eigen::VectorXf X= Eigen::Map<Eigen::VectorXf, Eigen::Unaligned>(Xvec.data(), Xvec.size());
+        evaluate_A(X, dt);
+        evaluate_b(X, dt);
+        X = A.colPivHouseholderQr().solve(b);
+        std::vector<float> Xf(X.data(), X.data() + X.rows() * X.cols());
+        return Xf;
+    }
+    
+    
     
     void evaluate_A(const Eigen::VectorXf& X, float dt){
         float coeff = dt*D/(2*dt*dt);
@@ -164,22 +218,16 @@ public:
     //TODO Works with zero boundary conditions at the edges
     void evaluate_b(const Eigen::VectorXf& X, float dt, float L, float kp){
         b = Eigen::VectorXf (grid_dim);
-        
-        
-        
-        
         for (int i = 1 ; i < grid_dim - 1 ; ++i ){
             b(i) = X(i)*(1.0/dt - CoeffA(L, kp)/std::pow(deltax, 2) - 1.0/(2.0*tau));
             b(i) += X(i+1)*(CoeffA(L, kp)/(2*std::pow(deltax, 2))+CoeffB(L, kp)/(2*deltax));
             b(i) += X(i-1)*(CoeffA(L, kp)/(2*std::pow(deltax, 2))-CoeffB(L, kp)/(2*deltax));
         }
-
     }
-    
     
 private:
     float deltax;
-    float tau;
+    float tau;        //Decay rate Model hyperparameter
 };
 */
 

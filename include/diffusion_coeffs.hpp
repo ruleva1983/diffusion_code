@@ -4,11 +4,11 @@
 #include <cmath>
 
 float CoeffA(float L, float kp){
-    return std::pow(10, 0.506*kp-9.325)*10*std::pow(L,10);
+    return std::pow(10, 0.506*kp-9.325)*std::pow(L,10);
 }
 
 float CoeffB(float L, float kp){
-    return std::pow(10, 0.506*kp-9.325)*(10*std::pow(L,9) - 2*std::pow(L,7));
+    return 8*std::pow(10, 0.506*kp-9.325)*std::pow(L,9);
 }
 
 
