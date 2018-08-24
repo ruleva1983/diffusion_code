@@ -5,10 +5,14 @@
 #include "grid.hpp"
 #include "boundary.hpp"
 #include <vector>
+#include <boost/date_time/gregorian/gregorian.hpp>
+#include "io.hpp"
 
+using namespace boost::gregorian;
 
 int main()
 {
+    date d(2002,1,10);
     const int N = 50;
     std::vector<float> Xin (N), Obs(0);
     for (int i=0 ; i < N ; ++i)

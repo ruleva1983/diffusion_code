@@ -9,6 +9,10 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
 set(sources main.cpp )
 
+find_package ( Boost )
+
+include_directories ( SYSTEM ${Boost_INCLUDE_DIRS} )
+
 include_directories(third-party)
 include_directories(include)
 
