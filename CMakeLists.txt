@@ -20,9 +20,7 @@ include_directories(include)
 
 add_executable(RadialDiff ${sources})
 
-#if(build_tests)
-#    find_package(GTest REQUIRED)
-#    include_directories(${GTEST_INCLUDE_DIRS})
+#if(BUILD_TESTS)
     add_subdirectory(third-party/googletest-release-1.8.1)
     add_subdirectory(tests)
 #endif()

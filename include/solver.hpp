@@ -12,7 +12,7 @@ void solve1D(Grid& grid, Integrator& scheme, const Boundary& bound, Observer& ob
     auto Xin = grid.get_state();
     while (tf > t0){
             Xin = scheme.make_step(Xin, dt);
-            grid.set_boundary(bound.low, bound.high);
+            grid.set_boundary(bound.low, bound.high, 0, Xin.size() - 1);
             t0 += dt;
             std::cout << t0 << std::endl;
             //Add observer
