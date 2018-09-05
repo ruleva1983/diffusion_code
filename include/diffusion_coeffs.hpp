@@ -38,18 +38,12 @@ private:
 
 
 
-
-
-
-template <class T = Constant, class F = Functional>
+//TODO Not clear if it is needed
+template <class T = Constant>
 class DiffusionCoefficients{
 public:
     DiffusionCoefficients(T CA=Constant(1.0), T CB=Constant(1.0), T CC=Constant(1.0),
                           T CD=Constant(1.0)): coeffA(CA), coeffB(CB), coeffC(CC), coeffD(CD)
-    {
-    }
-
-    DiffusionCoefficients(F CA, F CB, F CC, F CD): coeffA(CA), coeffB(CB), coeffC(CC), coeffD(CD)
     {
     }
 
