@@ -21,6 +21,6 @@ int main()
     Boundary1D<> boundary(0.0, 0.0);
     ImplicitScheme1D scheme(grid.get_deltax(),1.0);
     solve1D(grid, scheme, boundary,Obs , 0.0, 10.0, 0.1);
-    
+
 	return 0;
 }

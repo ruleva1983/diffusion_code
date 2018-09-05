@@ -9,7 +9,7 @@ option (BUILD_TESTS "Enable to build tests" ON)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
-set(sources main.cpp )
+set(sources main.cpp)
 
 find_package ( Boost )
 

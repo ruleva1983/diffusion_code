@@ -135,7 +135,7 @@ private:
     float D;
 };
 
-
+/*
 class ImplicitRadialDiffusion: public Scheme1D{
 
 public:

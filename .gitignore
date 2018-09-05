@@ -5,3 +5,4 @@
 /third-party/libpqxx
 *.gz
 /third-party/pgfe
+*.xml

@@ -1,0 +1,2 @@
+add_executable(diffusion_tests diffusion_tests.cpp Coeff1D_tests.cpp)
+target_link_libraries(diffusion_tests gtest gmock gmock_main)
