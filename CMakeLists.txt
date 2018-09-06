@@ -5,6 +5,7 @@ cmake_minimum_required (VERSION 3.5)
 add_definitions(-std=c++11)
 
 option (BUILD_TESTS "Enable to build tests" ON)
+option (BUILD_EXAMPLES "Enable to build examples" ON)
 
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
@@ -24,3 +25,5 @@ add_executable(RadialDiff ${sources})
     add_subdirectory(third-party/googletest-release-1.8.1)
     add_subdirectory(tests)
 #endif()
+
+    add_subdirectory(examples)

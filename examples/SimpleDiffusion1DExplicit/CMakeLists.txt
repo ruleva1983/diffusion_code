@@ -1,0 +1,1 @@
+add_executable(simplediffusion1D simple1Ddiffusion.cpp)

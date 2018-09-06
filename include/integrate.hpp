@@ -39,7 +39,7 @@ public:
     }
 
 protected:
-    Eigen::MatrixXf MatA; 
+    Eigen::MatrixXf MatA;
     Eigen::VectorXf Vecb;
 };
 
