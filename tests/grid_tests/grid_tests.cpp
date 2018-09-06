@@ -86,3 +86,27 @@ TEST(GridClass, GetState){
 
     ASSERT_EQ(grid.get_state(), values);
 }
+
+TEST(GridClass, Boundary){
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(5, 100);
+    std::uniform_real_distribution<> dis_real(0.0, 100.0);
+
+    float xL = dis_real(gen);
+    float xR = xL + dis_real(gen);
+    int N = dis(gen);
+
+    std::vector<float> values(0);
+    for (int i = 0 ; i < N; ++i)
+        values.push_back(dis_real(gen));
+    Grid1D<std::vector<float>> grid(N, xL, xR, values);
+
+    float upper = dis_real(gen);
+    float lower = dis_real(gen);
+
+    grid.set_boundary(lower, upper, 0, N-1);
+    ASSERT_EQ(grid.get_state()[0], lower);
+    ASSERT_EQ(grid.get_state()[N-1], upper);
+
+}

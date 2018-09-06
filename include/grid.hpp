@@ -49,6 +49,10 @@ public:
         return values;
     }
 
+    void set_state(DataType X){
+        values = X;
+    }
+
 
     float get_deltax(){
         return dx;
