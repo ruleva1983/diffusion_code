@@ -12,7 +12,7 @@ class Scheme1D{
 public:
     Scheme1D(){}
     
-    Eigen::VectorXf make_step(const Eigen::VectorXf& X, float t1, float t2) {
+    Eigen::VectorXf make_step(Eigen::VectorXf& X, float t1, float t2) {
         evaluate_A(X, t1, t2-t1);
         evaluate_b(X, t1, t2-t1);
         return MatA.colPivHouseholderQr().solve(Vecb);
@@ -30,9 +30,16 @@ public:
     virtual void evaluate_A(const Eigen::VectorXf&, float, float) = 0;
     virtual void evaluate_b(const Eigen::VectorXf&, float, float) = 0;
     
-    
+    float getMatA(int i, int j) const{
+        return MatA(i,j);
+    }
+
+    float getVecb(int i) const{
+        return Vecb(i);
+    }
+
 protected:
-    Eigen::MatrixXf MatA;  // Each scheme is characterized by a matrix A to be inverted
+    Eigen::MatrixXf MatA; 
     Eigen::VectorXf Vecb;
 };
 

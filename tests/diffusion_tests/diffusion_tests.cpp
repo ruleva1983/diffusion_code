@@ -7,7 +7,8 @@
 
 TEST(DiffusionCoeff, Constructor)
 {
-DiffusionCoefficients<> Coeffs(Constant(5.0), Constant(5.0), Constant(1.0), Constant(0.0));
+//DiffusionCoefficients<> Coeffs(Constant(5.0), Constant(5.0), Constant(1.0), Constant(0.0));
 //Coeffs.evalA(1,1);
 //ASSERT_EQ(grid.get_deltax(), 0.0);
+
 }

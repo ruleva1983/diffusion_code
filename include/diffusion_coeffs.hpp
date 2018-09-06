@@ -2,6 +2,7 @@
 #define DIFFUSION_COEFFS_H_
 
 #include <cmath>
+#include <functional>
 
 class Coeff1D{
 public:
@@ -21,7 +22,7 @@ private:
     float a;
 };
 
-template <typename F=float(*)(float, float)>
+template <typename F=std::function<float(float, float)>>
 class Functional: public Coeff1D{
 public:
     Functional (F f): function(f)
@@ -34,37 +35,6 @@ public:
 private:
     F function;
 
-};
-
-
-
-//TODO Not clear if it is needed
-template <class T = Constant>
-class DiffusionCoefficients{
-public:
-    DiffusionCoefficients(T CA=Constant(0.0), T CB=Constant(0.0), T CC=Constant(0.0),
-                          T CD=Constant(0.0)): coeffA(CA), coeffB(CB), coeffC(CC), coeffD(CD)
-    {
-    }
-
-    float evalA(float x, float t){
-        return coeffA(x, t);
-    }
-
-    float evalB(float x, float t){
-        return coeffB(x, t);
-    }
-
-    float evalC(float x, float t){
-        return coeffC(x, t);
-    }
-
-    float evalD(float x, float t){
-        return coeffD(x, t);
-    }
-
-private:
-    T coeffA, coeffB, coeffC, coeffD;
 };
 
 
