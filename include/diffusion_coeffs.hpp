@@ -42,8 +42,8 @@ private:
 template <class T = Constant>
 class DiffusionCoefficients{
 public:
-    DiffusionCoefficients(T CA=Constant(1.0), T CB=Constant(1.0), T CC=Constant(1.0),
-                          T CD=Constant(1.0)): coeffA(CA), coeffB(CB), coeffC(CC), coeffD(CD)
+    DiffusionCoefficients(T CA=Constant(0.0), T CB=Constant(0.0), T CC=Constant(0.0),
+                          T CD=Constant(0.0)): coeffA(CA), coeffB(CB), coeffC(CC), coeffD(CD)
     {
     }
 

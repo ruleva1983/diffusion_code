@@ -4,6 +4,7 @@
 #include "Eigen/Dense"
 #include "diffusion_coeffs.hpp"
 #include "grid.hpp"
+#include <functional>
 
 using namespace Eigen;
 
@@ -39,7 +40,7 @@ protected:
 class ExplicitScheme1D: public Scheme1D{
 
     
-using Coeff = float(*)(float, float);
+using Coeff = std::function<float(float, float)>;
 
 public:
     ExplicitScheme1D(float deltax, Coeff a, Coeff b, Coeff c, Coeff d ) : Scheme1D(), dx(deltax), A(a), B(b), C(c), D(d)
