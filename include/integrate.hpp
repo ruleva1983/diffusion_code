@@ -48,9 +48,6 @@ protected:
 
 class ExplicitScheme1D: public Scheme1D{
 
-    
-
-
 public:
     ExplicitScheme1D(float deltax, Coeff a, Coeff b, Coeff c, Coeff d ) : Scheme1D(), dx(deltax), A(a), B(b), C(c), D(d)
     {
@@ -98,7 +95,7 @@ public:
             MatA(i,i+1) = -dt/(dx*dx)*A(X(i),t+dt) + dt*B(X(i),t+dt);
         }
         MatA(X.size()-1, X.size()-1) = 1 + 2*dt/(dx*dx)*A(X(X.size()-1),t+dt) - dt*C(X(X.size()-1), t+dt);
-        MatA(X.size()-1, X.size()-2) = -dt/(dx*dx)*A(X(0),t+dt) - dt*B(X(0),t+dt);
+        MatA(X.size()-1, X.size()-2) = -dt/(dx*dx)*A(X(X.size()-1),t+dt) - dt*B(X(X.size()-1),t+dt);
     }
 
     void evaluate_b(const Eigen::VectorXf& X, float t, float dt){

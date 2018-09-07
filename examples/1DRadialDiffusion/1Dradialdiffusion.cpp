@@ -11,13 +11,13 @@
 
 
 
-const int N = 200;
-const float xL = 1, xR = 7;
+const int N = 20;
+const float xL = 1, xR = 6;
 const float dt = 0.01;
 const float t0 = 0;
 const float tF = 5.0;
 const float upperboundary = 7.2;
-const float lowerboundary = 0.0;
+const float lowerboundary = 1.0;
 const float tau=10.0;
 
 using FuncType = std::function<float(float, float)>;
@@ -25,9 +25,9 @@ using FuncType = std::function<float(float, float)>;
 
 float InitialState(float x){
     if (x < 2)
-        return 0,0;
+        return 1,0;
     else
-        return 0.0;
+        return 1.0;
 }
 
 float kp(float t){
@@ -43,9 +43,11 @@ int main()
     FuncType c = [tau](float x, float t){return -1/tau;};
     FuncType d = [](float x, float t){return 0.0;};
     Functional<FuncType> A(a);
-    Functional<FuncType> B(a);
-    Functional<FuncType> C(b);
+    Functional<FuncType> B(d);
+    Functional<FuncType> C(d);
     Functional<FuncType> D(d);
+    
+    std::cout << A(1,1) << " " << A(2, 1);
 
     float dx = (xR - xL)/ static_cast<float> (N);
     std::vector<float> Xin (N);
