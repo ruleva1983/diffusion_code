@@ -130,18 +130,26 @@ public:
             MatA(i,i+1) = -dt*(1-alpha)/(dx*dx)*A(X(i),t+dt) - (1-alpha)*dt*B(X(i),t+dt)/(2*dx);
         }
         MatA(X.size()-1, X.size()-1) = 1 + 2*dt/(dx*dx)*A(X(X.size()-1),t+dt) - dt*C(X(X.size()-1), t+dt)*(1-alpha);
-        MatA(X.size()-1, X.size()-2) = -dt/(dx*dx)*A(X(X.size()-1),t+dt) + dt*B(X(X.size()-1),t+dt)*(1-alpha)/(2*dx);
+        MatA(X.size()-1, X.size()-2) = -dt*(1-alpha)/(dx*dx)*A(X(X.size()-1),t+dt) + (1-alpha)*dt*B(X(X.size()-1),t+dt)/(2*dx);
     }
 
     void evaluate_b(const Eigen::VectorXf& X, float t, float dt){
         Vecb.resize(X.size());
-        for (int i = 1 ; i < X.size() - 1 ; ++i ){
-            float coeff_i = 1 + alpha*dt*C(X(i),t) - 2*alpha*dt/(dx*dx)*A(X(i),t);
-            float coeff_ip1 = alpha*dt/(dx*dx)*A(X(i),t) + alpha*dt/(2*dx)*B(X(i),t);
+        float coeff_i = 1 + alpha*dt*C(X(0),t) - 2*alpha*dt/(dx*dx)*A(X(0),t);
+        float coeff_ip1 = alpha*dt/(dx*dx)*A(X(0),t) + alpha*dt/(2*dx)*B(X(0),t);
+        float coeff = alpha*D(X(0),t) + (1-alpha)*D(X(0),t+dt);
+        Vecb(0) = coeff + coeff_i*X(0)  + coeff_ip1*X(1);
+        for (int i = 1 ; i < X.size() -1  ; ++i ){
+            coeff_i = 1 + alpha*dt*C(X(i),t) - 2*alpha*dt/(dx*dx)*A(X(i),t);
+            coeff_ip1 = alpha*dt/(dx*dx)*A(X(i),t) + alpha*dt/(2*dx)*B(X(i),t);
             float coeff_im1 = alpha*dt/(dx*dx)*A(X(i),t) - alpha*dt/(2*dx)*B(X(i),t);
-            float coeff = alpha*D(X(i),t) + (1-alpha)*D(X(i),t+dt);
+            coeff = alpha*D(X(i),t) + (1-alpha)*D(X(i),t+dt);
             Vecb(i) = coeff + coeff_i*X(i) + coeff_im1*X(i-1) + coeff_ip1*X(i+1);
         }
+        coeff_i = 1 + alpha*dt*C(X(X.size() -1),t) - 2*alpha*dt/(dx*dx)*A(X(X.size() -1),t);
+        float coeff_im1 = alpha*dt/(dx*dx)*A(X(X.size() -1),t) - alpha*dt/(2*dx)*B(X(X.size() -1),t);
+        coeff = alpha*D(X(X.size() -1),t) + (1-alpha)*D(X(X.size() -1),t+dt);
+        Vecb(X.size() -1) = coeff + coeff_i*X(X.size() -1) + coeff_im1*X(X.size()-2);
     }
 
 private:
