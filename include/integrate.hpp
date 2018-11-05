@@ -129,7 +129,7 @@ public:
             MatA(i,i-1) = -dt*(1-alpha)/(dx*dx)*A(X(i),t+dt) + (1-alpha)*dt*B(X(i),t+dt)/(2*dx);
             MatA(i,i+1) = -dt*(1-alpha)/(dx*dx)*A(X(i),t+dt) - (1-alpha)*dt*B(X(i),t+dt)/(2*dx);
         }
-        MatA(X.size()-1, X.size()-1) = 1 + 2*dt/(dx*dx)*A(X(X.size()-1),t+dt) - dt*C(X(X.size()-1), t+dt)*(1-alpha);
+        MatA(X.size()-1, X.size()-1) = 1 + 2*dt*(1-alpha)/(dx*dx)*A(X(X.size()-1),t+dt) - dt*(1-alpha)*C(X(X.size()-1), t+dt);
         MatA(X.size()-1, X.size()-2) = -dt*(1-alpha)/(dx*dx)*A(X(X.size()-1),t+dt) + (1-alpha)*dt*B(X(X.size()-1),t+dt)/(2*dx);
     }
 
